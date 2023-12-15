@@ -18,6 +18,7 @@ import { sprintf } from 'sprintf-js';
 import { BaseUnitConfig, Config, DeviceConfig } from './index';
 import Subscription from './Subscription';
 import SubscriptionMap from './SubscriptionMap';
+import { availabilityInfo, deviceInfo } from './utils';
 
 const logger = getLogger('NodeSOSMQTT');
 
@@ -186,7 +187,7 @@ class NodeSOSMqttAdapter {
 
     // Get configuration settings for device; don't go any further when
     // device is not included in the config.
-    const deviceConfig = this.config.adapter.devices.find((i) => i.device_id === device.deviceId.toString(16));
+    const deviceConfig = this.config.adapter.devices.find((i) => i.id === device.deviceId.toString(16));
     if (!deviceConfig) {
       logger.info(
         `Ignoring device as it was not listed in the config file: ${device.deviceId.toString(16)} ${device.type
@@ -205,14 +206,14 @@ class NodeSOSMqttAdapter {
     this.publishDeviceProperty(deviceConfig.topic, device, 'enableStatus', device.enableStatus);
 
     for (const statusName of enabledStatuses[device.category.code as keyof typeof enabledStatuses]) {
-      const topic = `${deviceConfig.topic}/enabled_status/${statusName}`;
+      const topic = `${deviceConfig.topic}/enabled_status/${statusName}/set`;
 
       // Subscribe to changes
       this.deviceSubscriptions.add(
-        new Subscription(`${topic}/set`, this.onEnabledStatusMessage, { device, status: ESFlags[statusName] }),
+        new Subscription(topic, this.onEnabledStatusMessage, { device, status: ESFlags[statusName] }),
       );
 
-      this.mqtt.subscribe(`${topic}/set`, { qos: 1 });
+      this.mqtt.subscribe(topic, { qos: 1 });
     }
 
     this.publishDeviceDiscoveryMessage(device, deviceConfig);
@@ -283,13 +284,10 @@ class NodeSOSMqttAdapter {
   }
 
   private deviceOnEvent(device: Device, eventCode: DeviceEventCode) {
-    const deviceConfig = this.config.adapter.devices.find((i) => i.device_id === device.deviceId.toString(16));
+    const deviceConfig = this.config.adapter.devices.find((i) => i.id === device.deviceId.toString(16));
     if (!deviceConfig) {
       return;
     }
-
-    // @TODO: Uee this?
-    // this.publish(`${deviceConfig.topic}/event_code`, String(eventCode), false);
 
     if ([DeviceEventCode.BatteryLow as number, DeviceEventCode.PowerOnReset as number].includes(eventCode)) {
       this.publish(`${deviceConfig.topic}/battery`, new IntEnum(DeviceEventCode, eventCode).string, true);
@@ -316,7 +314,7 @@ class NodeSOSMqttAdapter {
   }
 
   private deviceOnPropertiesChanged(device: Device, change: PropertyChangedInfo) {
-    const deviceConfig = this.config.adapter.devices.find((i) => i.device_id === device.deviceId.toString(16));
+    const deviceConfig = this.config.adapter.devices.find((i) => i.id === device.deviceId.toString(16));
     if (!deviceConfig) {
       return;
     }
@@ -355,11 +353,9 @@ class NodeSOSMqttAdapter {
       payload_disarm: 'Disarm',
       payload_arm_home: 'Home',
       payload_arm_away: 'Away',
-      availability_topic: `${config.topic}/is_connected`,
-      payload_available: String(true),
-      payload_not_available: String(false),
-      device: { ...config.device_info, ...{ identifiers: 'lifesos_baseunit' } },
+      ...availabilityInfo(config.topic),
       supported_features: ['trigger', 'arm_home', 'arm_away'],
+      ...deviceInfo('lifesos_baseunit', config),
     };
 
     this.publish(
@@ -370,18 +366,20 @@ class NodeSOSMqttAdapter {
   }
 
   private publishBaseunitClearAlarmEventsDiscoveryMessage(config: BaseUnitConfig) {
-    const message = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const message: any = {
       name: 'Clear alarm events',
       object_id: 'lifesos_clear_events',
       unique_id: 'lifesos_clear_events',
       icon: 'mdi:notification-clear-all',
       command_topic: `${config.topic}/clear_status`,
-      availability_topic: `${config.topic}/is_connected`,
-      payload_available: String(true),
-      payload_not_available: String(false),
-      payload_press: this.config.lifesos.password,
-      device: { ...config.device_info, ...{ identifiers: 'lifesos_baseunit' } },
+      ...availabilityInfo(config.topic),
+      ...deviceInfo('lifesos_baseunit', config),
     };
+
+    if (this.config.lifesos.password) {
+      message.payload_press = this.config.lifesos.password;
+    }
 
     this.publish(
       sprintf('%s/%s/%s/config', this.config.adapter.discovery_prefix, 'button', message['unique_id']),
@@ -396,11 +394,9 @@ class NodeSOSMqttAdapter {
       object_id: sprintf('lifesos_%06x', device.deviceId),
       unique_id: sprintf('lifesos_%06x', device.deviceId),
       state_topic: config.topic,
-      availability_topic: `${this.config.adapter.baseunit.topic}/is_connected`,
-      payload_available: String(true),
-      payload_not_available: String(false),
-      device: { ...config.device_info, ...{ identifiers: sprintf('lifesos_%06x', device.deviceId) } },
+      ...availabilityInfo(this.config.adapter.baseunit.topic),
       json_attributes_topic: `${config.topic}/attributes`,
+      ...deviceInfo(sprintf('lifesos_%06x', device.deviceId), config),
     };
 
     if (device.type?.value === DeviceType.SmokeDetector) {
@@ -437,11 +433,9 @@ class NodeSOSMqttAdapter {
         command_topic: `${config.topic}/enabled_status/${statusName}/set`,
         payload_on: String(true),
         payload_off: String(false),
-        availability_topic: `${this.config.adapter.baseunit.topic}/is_connected`,
-        payload_available: String(true),
-        payload_not_available: String(false),
+        ...availabilityInfo(this.config.adapter.baseunit.topic),
         entity_category: 'config',
-        device: { ...config.device_info, ...{ identifiers: sprintf('lifesos_%06x', device.deviceId) } },
+        ...deviceInfo(sprintf('lifesos_%06x', device.deviceId), config),
       };
 
       this.publish(
@@ -459,11 +453,9 @@ class NodeSOSMqttAdapter {
       icon: 'mdi:wifi',
       state_topic: `${config.topic}/rssiDb`,
       unit_of_measurement: 'dB',
-      availability_topic: `${this.config.adapter.baseunit.topic}/is_connected`,
-      payload_available: String(true),
-      payload_not_available: String(false),
+      ...availabilityInfo(this.config.adapter.baseunit.topic),
       entity_category: 'diagnostic',
-      device: { ...config.device_info, ...{ identifiers: sprintf('lifesos_%06x', device.deviceId) } },
+      ...deviceInfo(sprintf('lifesos_%06x', device.deviceId), config),
     };
 
     this.publish(
@@ -481,11 +473,9 @@ class NodeSOSMqttAdapter {
       payload_on: 'BatteryLow',
       payload_off: 'PowerOnReset',
       state_topic: `${config.topic}/battery`,
-      availability_topic: `${this.config.adapter.baseunit.topic}/is_connected`,
-      payload_available: String(true),
-      payload_not_available: String(false),
+      ...availabilityInfo(this.config.adapter.baseunit.topic),
       entity_category: 'diagnostic',
-      device: { ...config.device_info, ...{ identifiers: sprintf('lifesos_%06x', device.deviceId) } },
+      ...deviceInfo(sprintf('lifesos_%06x', device.deviceId), config),
     };
 
     this.publish(
@@ -511,7 +501,7 @@ class NodeSOSMqttAdapter {
     this.publishBaseunitClearAlarmEventsDiscoveryMessage(this.config.adapter.baseunit);
 
     for (const deviceConfig of this.config.adapter.devices) {
-      const device = this.baseunit.devices.get(parseInt(deviceConfig.device_id, 16));
+      const device = this.baseunit.devices.get(parseInt(deviceConfig.id, 16));
 
       if (device) {
         this.publishDeviceDiscoveryMessage(device, deviceConfig);

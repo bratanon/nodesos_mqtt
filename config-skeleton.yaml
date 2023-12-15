@@ -35,23 +35,20 @@ adapter:
   # Provide a topic for the Base Unit
   baseunit:
     topic: home/alarm
-    device_info:
-      name: "LifeSOS"
-      manufacturer: "LifeSOS"
-      model: "LS-20"
+    name: "LifeSOS"
+    manufacturer: "LifeSOS"
+    model: "LS-20"
 
   # List your enrolled devices here and provide a topic
   # Hint: Run 'list-devices' to get a list of device ids
   devices:
-    - device_id: '012cba'
+    - id: '012cba'
       topic: home/kitchen/pir
-      device_info:
-        name: "Kitchen"
-        manufacturer: "LifeSOS"
-        model: "PIR-3SP"
-    - device_id: '345def'
+      name: "Kitchen"
+      manufacturer: "LifeSOS"
+      model: "PIR-3SP"
+    - id: '345def'
       topic: home/front/door
-      device_info:
-        name: "Front door"
-        manufacturer: "LifeSOS"
-        model: "TX-3DSN"
+      name: "Front door"
+      manufacturer: "LifeSOS"
+      model: "TX-3DSN"

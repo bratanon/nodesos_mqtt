@@ -1,6 +1,4 @@
 #! /usr/bin/env node
-
-import './Logger';
 import { Command } from 'commander';
 import figlet from 'figlet';
 import fs from 'fs';
@@ -8,6 +6,7 @@ import yaml from 'js-yaml';
 import { getLogger } from 'log4js';
 import { Client, DC_ALL, DeviceInfoResponse, DeviceNotFoundResponse, GetDeviceByIndexCommand } from 'nodesos';
 import { sprintf } from 'sprintf-js';
+import { configureLog4j } from './Logger';
 import NodeSOSMqttAdapter from './NodeSOSMqttAdapter';
 
 const DEFAULT_CONFIGFILE = 'config.yaml';
@@ -18,18 +17,16 @@ const program = new Command();
 export type DeviceInfo = {
   name: string;
   manufacturer?: string;
-  model: string;
+  model?: string;
 };
 
-export type BaseUnitConfig = {
+export type BaseUnitConfig = DeviceInfo & {
   topic: string;
-  device_info: DeviceInfo;
 };
 
-export type DeviceConfig = {
-  device_id: string;
+export type DeviceConfig = DeviceInfo & {
+  id: string;
   topic: string;
-  device_info: DeviceInfo;
 };
 
 export type Config = {
@@ -68,7 +65,7 @@ const getConfig = (path: string) => {
 
 const listDevices = async (options: ActionOptions) => {
   if (options.verbose) {
-    logger.level = 'debug';
+    configureLog4j('debug');
   }
 
   const config = getConfig(options.configfile);
@@ -123,7 +120,7 @@ const listDevices = async (options: ActionOptions) => {
 
 const start = (options: ActionOptions) => {
   if (options.verbose) {
-    logger.level = 'debug';
+    configureLog4j('debug');
   }
 
   const gracefulShutdown = async () => {
