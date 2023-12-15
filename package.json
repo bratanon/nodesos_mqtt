@@ -1,6 +1,6 @@
 {
   "name": "nodesos_mqtt",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "MQTT client to report state of LifeSOS security system and devices.",
   "license": "MIT",
   "author": "Emil Stjerneman <emil@stjerneman.com>",
