@@ -137,7 +137,7 @@ class NodeSOSMqttAdapter {
       });
 
       this.mqtt.on('close', () => {
-        logger.info('MQTT Client Disconnected from broker');
+        logger.info('MQTT Client disconnected from broker');
       });
 
       this.mqtt.on('error', (error) => {
@@ -166,8 +166,11 @@ class NodeSOSMqttAdapter {
     });
     logger.info('Baseunit stopped');
 
-    if (this.mqtt.connected) {
-      this.publish(`${this.config.adapter.baseunit.topic}/is_connected`, String(false), true);
+    if (this.mqtt.connected || this.mqtt.reconnecting) {
+      if (this.mqtt.connected) {
+        this.publish(`${this.config.adapter.baseunit.topic}/is_connected`, String(false), true);
+      }
+
       await this.mqtt.endAsync().catch(() => {
         logger.error('Error ending MQTT Client');
       });
