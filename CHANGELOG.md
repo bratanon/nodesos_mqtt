@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2023-12-16
+
 ### Fixed
 - Log4js is configured all the time.
 - Handle MQTT client close when it is reconnecting.
