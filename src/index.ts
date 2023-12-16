@@ -11,6 +11,7 @@ import NodeSOSMqttAdapter from './NodeSOSMqttAdapter';
 
 const DEFAULT_CONFIGFILE = 'config.yaml';
 
+configureLog4j('info');
 const logger = getLogger('NodeSOSMQTT');
 const program = new Command();
 
