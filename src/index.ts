@@ -9,10 +9,14 @@ import { sprintf } from 'sprintf-js';
 import { configureLog4j } from './Logger';
 import NodeSOSMqttAdapter from './NodeSOSMqttAdapter';
 
+const NAME = 'nodesos_mqtt';
+const VERSION = '2.0.0';
+const DESCRIPTION = 'MQTT client to report state of LifeSOS security system and devices.';
 const DEFAULT_CONFIGFILE = 'config.yaml';
 
 configureLog4j('info');
 const logger = getLogger('NodeSOSMQTT');
+
 const program = new Command();
 
 export type DeviceInfo = {
@@ -125,7 +129,7 @@ const start = (options: ActionOptions) => {
   }
 
   const gracefulShutdown = async () => {
-    // Disconnect
+    logger.info('Shutting down....');
     await adapter.stop();
     process.exit(0);
   };
@@ -141,12 +145,11 @@ const start = (options: ActionOptions) => {
   });
 };
 
-console.log(figlet.textSync('NodeSOS MQTT')); // eslint-disable-line no-console
-
 // Display application header
-console.log(`NodeSOS_MQTT v0.0.0 - MQTT client to report state of LifeSOS security system and devices.\n\n`); // eslint-disable-line no-console
+console.log(figlet.textSync('NodeSOS MQTT')); // eslint-disable-line no-console
+console.log(`NodeSOS_MQTT ${VERSION} - ${DESCRIPTION}.\n\n`); // eslint-disable-line no-console
 
-program.name('nodesos_mqtt').description('NodeSOS CLI').version('1.0.0');
+program.name(NAME).description(DESCRIPTION).version(VERSION);
 
 program
   .command('list-devices')
