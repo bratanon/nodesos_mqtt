@@ -12,4 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handle MQTT client close when it is reconnecting.
 - Logger should show category.
 
-
+### Changed
+- Bumped nodesos to 1.0.2.
