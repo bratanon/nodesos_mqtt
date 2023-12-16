@@ -7,7 +7,7 @@ export const configureLog4j = (logLever?: string) => {
         type: 'stdout',
         layout: {
           type: 'pattern',
-          pattern: '%[[%d{ISO8601}] [%-5.5p] %m%]',
+          pattern: '%[[%d{ISO8601}] [%-5.5p] [%c] %m%]',
         },
       },
     },
