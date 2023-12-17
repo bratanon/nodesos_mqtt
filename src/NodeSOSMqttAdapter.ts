@@ -455,6 +455,7 @@ class NodeSOSMqttAdapter {
       unique_id: sprintf('lifesos_%06x_rssi', device.deviceId),
       icon: 'mdi:wifi',
       state_topic: `${config.topic}/rssiDb`,
+      device_class: 'signal_strength',
       unit_of_measurement: 'dB',
       ...availabilityInfo(this.config.adapter.baseunit.topic),
       entity_category: 'diagnostic',
