@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - RSSI sensors `device_class` should be `signal_strength`.
 - Graceful shutdown on adapter start error.
+- HA 2024.6+ fixes for alarm control panel code requirements.
 
 ## [2.0.1] - 2023-12-16
 
