@@ -113,7 +113,7 @@ class NodeSOSMqttAdapter {
    * Starts up the LifeSOS interface and connects to MQTT broker.
    */
   async start() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       this.mqtt.connect();
 
       this.mqtt.once('connect', () => {
@@ -123,7 +123,7 @@ class NodeSOSMqttAdapter {
             resolve();
           })
           .catch((error) => {
-            throw error;
+            reject(error);
           });
       });
 
@@ -193,8 +193,9 @@ class NodeSOSMqttAdapter {
     const deviceConfig = this.config.adapter.devices.find((i) => i.id === device.deviceId.toString(16));
     if (!deviceConfig) {
       logger.info(
-        `Ignoring device as it was not listed in the config file: ${device.deviceId.toString(16)} ${device.type
-          ?.string}`,
+        `Ignoring device as it was not listed in the config file: ${device.deviceId.toString(16)} ${
+          device.type?.string
+        }`,
       );
       return;
     }

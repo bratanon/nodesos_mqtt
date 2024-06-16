@@ -142,6 +142,7 @@ const start = (options: ActionOptions) => {
   const adapter = new NodeSOSMqttAdapter(config);
   adapter.start().catch((error) => {
     logger.error('Could not connect to the base unit', error);
+    gracefulShutdown();
   });
 };
 
