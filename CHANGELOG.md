@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- .`nvmrc` file.
+- Enforce node 20+.
+
+### Changed
+- Dependabot uses node version from `.nvmrc`.
+
 ### Fixed
 - RSSI sensors `device_class` should be `signal_strength`.
 
