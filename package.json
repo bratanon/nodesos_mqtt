@@ -2,6 +2,10 @@
   "name": "nodesos_mqtt",
   "version": "2.0.1",
   "description": "MQTT client to report state of LifeSOS security system and devices.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bratanon/nodesos_mqtt.git"
+  },
   "license": "MIT",
   "author": "Emil Stjerneman <emil@stjerneman.com>",
   "main": "./dist/index.js",
@@ -56,5 +60,8 @@
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
