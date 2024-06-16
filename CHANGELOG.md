@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] 2024-06-17
 ### Added
 - .`nvmrc` file.
 - Enforce node 20+.
@@ -14,13 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dependabot uses node version from `.nvmrc`.
 - Dependabot updates GitHub actions.
+- Bumped nodesos to 2.0.0.
 
 ### Fixed
 - RSSI sensors `device_class` should be `signal_strength`.
 - Graceful shutdown on adapter start error.
 - HA 2024.6+ fixes for alarm control panel code requirements.
 
-## [2.0.1] - 2023-12-16
+## [2.0.1] 2023-12-16
 
 ### Fixed
 - Log4js is configured all the time.
