@@ -558,7 +558,7 @@ class NodeSOSMqttAdapter {
     this.baseunit
       .clearStatus(message)
       .then(() => {
-        logger.info(`Task: ClearStatus executed successfully`);
+        logger.info('Task: ClearStatus executed successfully');
       })
       .catch((error) => {
         logger.error('Error clearStatus:', error);
