@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "figlet": "^1.7.0",
+    "figlet": "^1.8.0",
     "js-yaml": "^4.1.0",
     "mqtt": "^5.10.1",
     "nodesos": "^2.0.0",
