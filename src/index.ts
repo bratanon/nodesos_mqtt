@@ -108,7 +108,7 @@ const listDevices = async (options: ActionOptions) => {
 
       logger.info(
         sprintf(
-          "DeviceID '%s' for %s zone %s, a %s.",
+          'DeviceID "%s" for %s zone %s, a %s.',
           response.deviceId,
           response.deviceCategory.description,
           response.zone,
