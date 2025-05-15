@@ -82,3 +82,6 @@ yalc.lock
 
 # config
 config.yaml
+
+# project meta
+src/meta.ts

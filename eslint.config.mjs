@@ -7,6 +7,9 @@ const config = tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    ignores: ['src/meta.ts'],
+  },
+  {
     name: 'Common rules for all files',
     plugins: {
       "simple-import-sort": simpleImportSort,

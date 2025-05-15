@@ -17,7 +17,7 @@
     "README.md"
   ],
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && node scripts/generate-meta.js",
     "build": "npx tsc",
     "format:package": "npx sort-package-json",
     "lint": "eslint src",

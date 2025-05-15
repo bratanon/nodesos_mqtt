@@ -7,11 +7,12 @@ import { getLogger } from 'log4js';
 import { Client, DC_ALL, DeviceInfoResponse, DeviceNotFoundResponse, GetDeviceByIndexCommand } from 'nodesos';
 import { sprintf } from 'sprintf-js';
 import { configureLog4j } from './Logger';
+import { description, version } from './meta';
 import NodeSOSMqttAdapter from './NodeSOSMqttAdapter';
 
 const NAME = 'nodesos_mqtt';
-const VERSION = '2.0.0';
-const DESCRIPTION = 'MQTT client to report state of LifeSOS security system and devices.';
+const VERSION = version;
+const DESCRIPTION = description;
 const DEFAULT_CONFIGFILE = 'config.yaml';
 
 configureLog4j('info');
