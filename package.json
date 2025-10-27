@@ -36,7 +36,7 @@
     "package.json": "npm run format:package"
   },
   "dependencies": {
-    "commander": "^14.0.1",
+    "commander": "^14.0.2",
     "figlet": "^1.9.3",
     "js-yaml": "^4.1.0",
     "mqtt": "^5.14.1",
