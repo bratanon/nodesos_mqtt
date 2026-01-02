@@ -1,6 +1,6 @@
 {
   "name": "nodesos_mqtt",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "MQTT client to report state of LifeSOS security system and devices.",
   "repository": {
     "type": "git",
