@@ -350,7 +350,7 @@ class NodeSOSMqttAdapter {
 
   private publishBaseunitDiscoveryMessage(config: BaseUnitConfig) {
     const message = {
-      object_id: 'lifesos_baseunit',
+      default_entity_id: 'lifesos_baseunit',
       unique_id: 'lifesos_baseunit',
       state_topic: `${config.topic}/ha_state`,
       command_topic: `${config.topic}/operation_mode/set`,
@@ -376,7 +376,7 @@ class NodeSOSMqttAdapter {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const message: any = {
       name: 'Clear alarm events',
-      object_id: 'lifesos_clear_events',
+      default_entity_id: 'lifesos_clear_events',
       unique_id: 'lifesos_clear_events',
       icon: 'mdi:notification-clear-all',
       command_topic: `${config.topic}/clear_status`,
@@ -398,7 +398,7 @@ class NodeSOSMqttAdapter {
   private publishDeviceDiscoveryMessage(device: Device, config: DeviceConfig) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const message: any = {
-      object_id: sprintf('lifesos_%06x', device.deviceId),
+      default_entity_id: sprintf('lifesos_%06x', device.deviceId),
       unique_id: sprintf('lifesos_%06x', device.deviceId),
       state_topic: config.topic,
       ...availabilityInfo(this.config.adapter.baseunit.topic),
@@ -434,7 +434,7 @@ class NodeSOSMqttAdapter {
     for (const statusName of enabledStatuses[device.category.code as keyof typeof enabledStatuses]) {
       const message = {
         name: statusName,
-        object_id: sprintf('lifesos_%06x_es_%s', device.deviceId, statusName.toLowerCase()),
+        default_entity_id: sprintf('lifesos_%06x_es_%s', device.deviceId, statusName.toLowerCase()),
         unique_id: sprintf('lifesos_%06x_es_%s', device.deviceId, statusName.toLowerCase()),
         state_topic: `${config.topic}/enabled_status/${statusName}`,
         command_topic: `${config.topic}/enabled_status/${statusName}/set`,
@@ -455,7 +455,7 @@ class NodeSOSMqttAdapter {
 
   private publishDeviceRSSIDiscoveryMessage(device: Device, config: DeviceConfig) {
     const message = {
-      object_id: sprintf('lifesos_%06x_rssi', device.deviceId),
+      default_entity_id: sprintf('lifesos_%06x_rssi', device.deviceId),
       unique_id: sprintf('lifesos_%06x_rssi', device.deviceId),
       icon: 'mdi:wifi',
       state_topic: `${config.topic}/rssiDb`,
@@ -475,7 +475,7 @@ class NodeSOSMqttAdapter {
 
   private publishDeviceBatteryDiscoveryMessage(device: Device, config: DeviceConfig) {
     const message = {
-      object_id: sprintf('lifesos_%06x_battery', device.deviceId),
+      default_entity_id: sprintf('lifesos_%06x_battery', device.deviceId),
       unique_id: sprintf('lifesos_%06x_battery', device.deviceId),
       device_class: 'battery',
       payload_on: 'BatteryLow',
